@@ -78,7 +78,7 @@ class GameManager
         $this->em->persist($player2);
 
         $this->logger->info(sprintf(
-            'Creating player %s and player %s', $player1Name, $player2Name
+            'GameManager: Creating player %s and player %s', $player1Name, $player2Name
         ));
 
         // insert the players to the db
@@ -134,7 +134,7 @@ class GameManager
         // insert cards to the db
         $this->em->flush();
 
-        $this->logger->info('Deck generated');
+        $this->logger->info('GameManager: Deck generated');
 
         return $this->getCardRepository()->findAll();
     }

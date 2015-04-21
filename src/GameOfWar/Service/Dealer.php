@@ -49,11 +49,11 @@ class Dealer
      */
     public function deal(array $cards, Player $player1, Player $player2)
     {
-        $this->logger->info('Shuffling cards');
+        $this->logger->info('Dealer: Shuffling cards');
 
         shuffle($cards);
 
-        $this->logger->info('Dealing cards to player 1 and 2');
+        $this->logger->info('Dealer: Dealing cards to player 1 and 2');
 
         $i = 1;
         foreach ($cards as $card) {
@@ -67,6 +67,6 @@ class Dealer
         // insert player cards to the db
         $this->em->flush();
 
-        $this->logger->info('Cards dealt');
+        $this->logger->info('Dealer: Cards dealt');
     }
 }

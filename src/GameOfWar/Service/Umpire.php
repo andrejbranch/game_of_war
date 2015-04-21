@@ -84,7 +84,7 @@ class Umpire
      */
     private function handleWin(Player $winningPlayer, Player $losingPlayer)
     {
-        $this->logger->info(sprintf('%s wins this hand', $winningPlayer->getName()));
+        $this->logger->info(sprintf('Umpire: %s wins this hand', $winningPlayer->getName()));
 
         $winningPlayerCard = $winningPlayer->getPlayerCardInPlay();
         $losingPlayerCard = $losingPlayer->getPlayerCardInPlay();
