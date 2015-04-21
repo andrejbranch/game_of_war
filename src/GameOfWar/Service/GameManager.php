@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\Container;
  * The GameManager is a service in charge of handling the flow of
  * the game of war.
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
 class GameManager

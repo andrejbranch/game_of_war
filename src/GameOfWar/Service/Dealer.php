@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Container;
  * The dealer is a service in charge of shuffling the deck of cards
  * and evenly distributing the cards among the two players
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
 class Dealer

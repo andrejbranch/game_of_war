@@ -8,6 +8,7 @@ use Monolog\Logger as Monologger;
 /**
  * The game of war logger, extended from Monologger
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
 class Logger extends Monologger

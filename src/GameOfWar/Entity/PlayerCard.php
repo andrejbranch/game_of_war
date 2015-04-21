@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping AS ORM;
  *
  * The entity model for a player card, this is a linker from player to card
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
 class PlayerCard

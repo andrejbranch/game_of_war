@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
  * for the game of war. It decides who wins and distributes
  * cards to the winner of each hand.
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
 class Umpire

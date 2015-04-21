@@ -8,6 +8,7 @@
  * asking for user input for both players names and
  * passing them to the game manager to start the game
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
 

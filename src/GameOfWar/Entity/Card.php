@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping AS ORM;
  *
  * The entity model for a card in a deck
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
 class Card

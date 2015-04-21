@@ -7,6 +7,7 @@
  * loading services into the container, and loading configurations
  * from the config files.
  *
+ * @version 1.01
  * @author Andre Jon Branchizio <andrejbranchizio@gmail.com>
  */
 
