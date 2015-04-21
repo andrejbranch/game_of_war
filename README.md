@@ -42,6 +42,38 @@ Schema
       PRIMARY KEY (`id`)
     )
 
+    CREATE TABLE `games` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `player1_id` int(11) NOT NULL,
+      `player2_id` int(11) NOT NULL,
+      `winning_player_id` int(11) DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `UNIQ_FF232B31C0990423` (`player1_id`),
+      UNIQUE KEY `UNIQ_FF232B31D22CABCD` (`player2_id`),
+      UNIQUE KEY `UNIQ_FF232B3187E2974C` (`winning_player_id`),
+      CONSTRAINT `FK_FF232B3187E2974C` FOREIGN KEY (`winning_player_id`) REFERENCES `players` (`id`),
+      CONSTRAINT `FK_FF232B31C0990423` FOREIGN KEY (`player1_id`) REFERENCES `players` (`id`),
+      CONSTRAINT `FK_FF232B31D22CABCD` FOREIGN KEY (`player2_id`) REFERENCES `players` (`id`)
+    )
+
+    CREATE TABLE `rounds` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `player1_card_played_id` int(11) DEFAULT NULL,
+      `player2_card_played_id` int(11) DEFAULT NULL,
+      `winning_player_id` int(11) DEFAULT NULL,
+      `game_id` int(11) NOT NULL,
+      `isWar` tinyint(1) NOT NULL,
+      PRIMARY KEY (`id`),
+      KEY `IDX_3A7FD554843CBB20` (`player1_card_played_id`),
+      KEY `IDX_3A7FD554ADF40FD2` (`player2_card_played_id`),
+      KEY `IDX_3A7FD55487E2974C` (`winning_player_id`),
+      KEY `IDX_3A7FD554E48FD905` (`game_id`),
+      CONSTRAINT `FK_3A7FD554843CBB20` FOREIGN KEY (`player1_card_played_id`) REFERENCES `cards` (`id`),
+      CONSTRAINT `FK_3A7FD55487E2974C` FOREIGN KEY (`winning_player_id`) REFERENCES `players` (`id`),
+      CONSTRAINT `FK_3A7FD554ADF40FD2` FOREIGN KEY (`player2_card_played_id`) REFERENCES `cards` (`id`),
+      CONSTRAINT `FK_3A7FD554E48FD905` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`)
+    )
+
     CREATE TABLE `player_cards` (
       `player_id` int(11) NOT NULL,
       `card_id` int(11) NOT NULL,
