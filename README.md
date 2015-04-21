@@ -1,10 +1,6 @@
-# game_of_war
-Game of war php project
-
-
-
 Game Of War
 =========
+The game of war card game written in php
 
 Installation
 ------------
@@ -22,7 +18,7 @@ Replace the user and password if necessary
 Create the game_of_war database
 
     mysql -u root -p
-    create database quore_fun
+    create database game_of_war
 
 From the root directory tell doctrine to build the database schema and generate proxies
 
