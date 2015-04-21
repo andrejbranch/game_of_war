@@ -7,11 +7,12 @@ services:
     dealer:
         class: GameOfWar\Service\Dealer
         arguments:
-            - @logger
+            - @service_container
 
     game_manager:
         class: GameOfWar\Service\GameManager
         arguments:
+            - @service_container
             - @dealer
 
     # pipeline_manager:

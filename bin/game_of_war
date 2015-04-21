@@ -9,15 +9,24 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 $console = new Application();
 
 $console
     ->register('start')
     ->setDescription('Starts the game of war')
-    ->setCode(function (InputInterface $input, OutputInterface $output) use ($container) {
+    ->setCode(function (InputInterface $input, OutputInterface $output) use ($container, $console) {
+
+        $helper = $console->getHelperSet()->get('question');
+        $question1 = new Question('<info>Enter the name of player 1</info>  ', false);
+        $question2 = new Question('<info>Enter the name of player 2</info>  ', false);
+
+        $player1Name = $helper->ask($input, $output, $question1);
+        $player2Name = $helper->ask($input, $output, $question2);
+
         $gameManager = $container->get('game_manager');
-        $gameManager->start();
+        $gameManager->start($player1Name, $player2Name);
     })
 ;
 

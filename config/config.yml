@@ -1,2 +1,44 @@
 parameters:
+
     env: dev
+
+    cards:
+        1:
+            name: 2
+            power: 1
+        2:
+            name: 3
+            power: 2
+        3:
+            name: 4
+            power: 3
+        4:
+            name: 5
+            power: 4
+        5:
+            name: 6
+            power: 5
+        6:
+            name: 7
+            power: 6
+        7:
+            name: 8
+            power: 7
+        8:
+            name: 9
+            power: 8
+        9:
+            name: 10
+            power: 9
+        10:
+            name: Jack
+            power: 10
+        11:
+            name: Queen
+            power: 11
+        12:
+            name: King
+            power: 12
+        13:
+            name: Ace
+            power: 13
