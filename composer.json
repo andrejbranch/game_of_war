@@ -1,0 +1,16 @@
+{
+    "autoload": {
+        "psr-0": {
+            "GameOfWar": "src"
+        }
+    },
+    "require": {
+        "monolog/monolog": "1.9.*@dev",
+        "symfony/yaml": "2.5.*@dev",
+        "symfony/config": "2.5.*@dev",
+        "symfony/dependency-injection": "2.5.*@dev",
+        "symfony/console": "2.6.*@dev",
+        "symfony/process": "2.6.1",
+        "doctrine/orm": "2.4.*"
+    }
+}
