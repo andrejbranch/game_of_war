@@ -119,7 +119,7 @@ class GameManager
      */
     private function generateDeck()
     {
-        $this->getLogger()->info('Generating deck of cards');
+        $this->logger->info('Generating deck of cards');
 
         $cardConfigs = $this->getCardConfigs();
 
@@ -133,7 +133,7 @@ class GameManager
         // insert cards to the db
         $this->em->flush();
 
-        $this->getLogger()->info('Deck generated');
+        $this->logger->info('Deck generated');
 
         return $this->getCardRepository()->findAll();
     }
