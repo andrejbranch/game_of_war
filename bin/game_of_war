@@ -26,7 +26,9 @@ $console
         $player2Name = $helper->ask($input, $output, $question2);
 
         $gameManager = $container->get('game_manager');
-        $gameManager->start($player1Name, $player2Name);
+        $winner = $gameManager->start($player1Name, $player2Name);
+
+        $output->writeln(sprintf('<info>%s wins!</info>', $winner->getName()));
     })
 ;
 

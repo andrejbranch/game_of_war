@@ -24,15 +24,26 @@ class GameManager
     private $dealer;
 
     /**
+     * @var GameOfWar\Service\Umpire
+     */
+    private $umpire;
+
+    /**
      * @var GameOfWar\Service\Logger
      */
     private $logger;
+
+    /**
+     * @var array cards on the table
+     */
+    private $playedCards = array();
 
     public function __construct(Container $container, Dealer $dealer)
     {
         $this->container = $container;
         $this->em = $this->getEntityManager();
         $this->dealer = $dealer;
+        $this->umpire = $this->getUmpire();
         $this->logger = $this->getLogger();
     }
 
@@ -65,58 +76,25 @@ class GameManager
 
         while ($gameContinues) {
 
-            $player1Card = $player1->getPlayerCards()->first()->getCard();
-            $player2Card = $player2->getPlayerCards()->first()->getCard();
+            $this->umpire->handlePlay($player1, $player2);
 
-            $this->logger->info(sprintf('%s turns a %s', $player1Name, $player1Card));
-            $this->logger->info(sprintf('%s turns a %s', $player2Name, $player2Card));
+            $player1CardCount = $player1->getCardCount();
+            $player2CardCount = $player2->getCardCount();
 
-            $winningPlayer = $player1Card->getPower() > $player2Card->getPower() ? $player1: $player2;
-            $losingPlayer = $player1Card->getPower() > $player2Card->getPower() ? $player2: $player1;
+            $this->logger->info(sprintf('GameManager: %s now has %s cards', $player1->getName(), $player1CardCount));
+            $this->logger->info(sprintf('GameManager: %s now has %s cards', $player2->getName(), $player2CardCount));
 
-            // // handle war
-            // if ($player1Card->getPower() == $player2Card->getPower()) {
-
-            //     $this->logger->info('This means war!');
-
-            // } else {
-                $this->logger->info(sprintf('%s wins this hand', $winningPlayer->getName()));
-                $this->handleWin($winningPlayer, $losingPlayer);
-            // }
-
-            if ($player1->getPlayerCards()->count() == 0 | $player2->getPlayerCards()->count() == 0) {
+            if ($player1->getCardCount() == 0 | $player2->getCardCount() == 0) {
                 $gameContinues = false;
             }
-
-            // $player1Cards = $player1->getPlayerCards();
-            // $player2Cards = $player2->getPlayerCards();
-
-            // die;
         }
+
+        $winningPlayer = $player1CardCount == 0 ? $player2 : $player1;
+
+        $this->logger->info(sprintf('GameManager: %s wins!', $winningPlayer->getName()));
+
+        return $winningPlayer;
     }
-
-    private function handleWin(Player $winningPlayer, Player $losingPlayer)
-    {
-        $winningPlayerCard = $winningPlayer->getPlayerCards()->first();
-        $losingPlayerCard = $losingPlayer->getPlayerCards()->first();
-
-        // remove losing players card from his deck
-        $losingPlayer->removePlayerCard($losingPlayerCard);
-
-        // remove winning players card from his deck and put at the bottom
-        $winningPlayer->removePlayerCard($winningPlayerCard);
-        $winningPlayer->addPlayerCard($winningPlayerCard);
-
-        // put losing players card at the bottom of winning players deck
-        $winningPlayer->addPlayerCard($losingPlayerCard);
-
-        // update the db
-        $this->em->flush();
-    }
-
-    // private function handlePlay($player1, $player2, $player1)
-    // {
-    // }
 
     /**
      * Generate the deck of cards using configurations
@@ -178,5 +156,14 @@ class GameManager
     private function getCardConfigs()
     {
         return $this->container->getParameter('cards');
+    }
+
+    /**
+     * Get the game of war umpire
+     * @return GameOfWar\Service\Umpire
+     */
+    private function getUmpire()
+    {
+        return $this->container->get('umpire');
     }
 }

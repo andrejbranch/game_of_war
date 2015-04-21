@@ -15,38 +15,7 @@ services:
             - @service_container
             - @dealer
 
-    # pipeline_manager:
-    #     class: SEEQMGMD\Service\PipelineManager
-    #     arguments:
-    #         - @logger
-    #         - @service_container
-
-    # analyzer:
-    #     class: SEEQMGMD\Service\Analyzer
-    #     arguments:
-    #         - @logger
-    #         - @service_container
-
-    # upload_query_builder:
-    #     class: SEEQMGMD\Service\UploadQueryBuilder
-    #     arguments:
-    #         - @logger
-    #         - @service_container
-
-    # uploader:
-    #     class: SEEQMGMD\Service\Uploader
-    #     arguments:
-    #         - @logger
-    #         - @service_container
-
-    # dispatcher:
-    #     class: SEEQMGMD\Dispatcher
-    #     arguments:
-    #         - @service_container
-    #         - @logger
-
-    # controller:
-    #     class: SEEQMGMD\Controller
-    #     arguments:
-    #         - @service_container
-    #         - @logger
+    umpire:
+        class: GameOfWar\Service\Umpire
+        arguments:
+            - @service_container
