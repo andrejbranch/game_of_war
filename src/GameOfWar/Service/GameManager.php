@@ -98,7 +98,7 @@ class GameManager
             $this->logger->info(sprintf('GameManager: %s now has %s cards', $player1->getName(), $player1CardCount));
             $this->logger->info(sprintf('GameManager: %s now has %s cards', $player2->getName(), $player2CardCount));
 
-            if ($player1CardCount == 0 | $player2CardCount == 0) {
+            if ($player1CardCount == 0 || $player2CardCount == 0) {
                 $gameContinues = false;
             }
         }
