@@ -6,25 +6,31 @@ use GameOfWar\Entity\Card;
 use GameOfWar\Entity\Player;
 use Symfony\Component\DependencyInjection\Container;
 
+/**
+ * The GameManager is a service in charge of handling the flow of
+ * the game of war.
+ *
+ * @author Andre Jon Branchizio <andrejbranch@gmail.com>
+ */
 class GameManager
 {
     /**
-     * @var Symfony\Component\DependencyInjection\Container
+     * @var Symfony\Component\DependencyInjection\Container The dependency injection container
      */
     private $container;
 
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var Doctrine\ORM\EntityManager for flushing and persisting objects to db
      */
     private $em;
 
     /**
-     * @var GameOfWar\Service\Dealer
+     * @var GameOfWar\Service\Dealer deals the deck of cards
      */
     private $dealer;
 
     /**
-     * @var GameOfWar\Service\Umpire
+     * @var GameOfWar\Service\Umpire The referee and arbitrator
      */
     private $umpire;
 
@@ -34,19 +40,27 @@ class GameManager
     private $logger;
 
     /**
-     * @var array cards on the table
+     * Initializes a new GameManager instance
+     *
+     * @param Symfony\Component\DependencyInjection\Container $container
      */
-    private $playedCards = array();
-
-    public function __construct(Container $container, Dealer $dealer)
+    public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->dealer = $this->getDealer();
         $this->em = $this->getEntityManager();
-        $this->dealer = $dealer;
         $this->umpire = $this->getUmpire();
         $this->logger = $this->getLogger();
     }
 
+    /**
+     * Starts the game of war
+     *
+     * @param string $player1Name player name entered from command line
+     * @param string $player2Name player name entered from command line
+     *
+     * @return GameOfWar\Entity\Player the winning player
+     */
     public function start($player1Name, $player2Name)
     {
         $cards = $this->getCardRepository()->findAll();
@@ -97,9 +111,11 @@ class GameManager
     }
 
     /**
-     * Generate the deck of cards using configurations
-     * stored in config/config.yml
-     * @return array of cards
+     * Generate the deck of cards using configurations. This is only called
+     * if this is the first time the game is being run.
+     *
+     * @see config/config.yml
+     * @return array of GameOfWar\Entity\Card objects
      */
     private function generateDeck()
     {
@@ -123,7 +139,18 @@ class GameManager
     }
 
     /**
+     * Get the game of war card dealer
+     *
+     * @return GameOfWar\Service\Dealer
+     */
+    private function getDealer()
+    {
+        return $this->container->get('dealer');
+    }
+
+    /**
      * Get doctrine entity manager
+     *
      * @return Doctrine\ORM\EntityManager
      */
     private function getEntityManager()
@@ -133,6 +160,7 @@ class GameManager
 
     /**
      * Get game of war logger
+     *
      * @return GameOfWar\Service\Logger
      */
     private function getLogger()
@@ -142,6 +170,7 @@ class GameManager
 
     /**
      * Get card entity repository
+     *
      * @return GameOfWar\Entity\CardRepository;
      */
     private function getCardRepository()
@@ -151,6 +180,8 @@ class GameManager
 
     /**
      * Get the card configurations
+     *
+     * @see config/config.yml
      * @return array
      */
     private function getCardConfigs()
@@ -160,6 +191,7 @@ class GameManager
 
     /**
      * Get the game of war umpire
+     *
      * @return GameOfWar\Service\Umpire
      */
     private function getUmpire()

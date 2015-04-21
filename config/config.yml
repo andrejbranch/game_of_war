@@ -1,7 +1,8 @@
 parameters:
 
-    env: dev
-
+    # The card configurations. You can change the relative power of each card,
+    # i.e make aces lower power the kings. You can also add Jokers depending on
+    # the variation of your game
     cards:
         1:
             name: 2

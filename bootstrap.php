@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Bootstraps the game of war application.
+ * Initializing Doctrine ORM, the EntityManager, and the database,
+ * as well as setting up the dependency injection container,
+ * loading services into the container, and loading configurations
+ * from the config files.
+ *
+ * @author Andre Jon Branchizio <andrejbranchizio@gmail.com>
+ */
+
 require_once 'vendor/autoload.php';
 
 use Doctrine\Common\Annotations\AnnotationReader;

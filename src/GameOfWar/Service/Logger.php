@@ -5,19 +5,33 @@ namespace GameOfWar\Service;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as Monologger;
 
+/**
+ * The game of war logger, extended from Monologger
+ *
+ * @author Andre Jon Branchizio <andrejbranch@gmail.com>
+ */
 class Logger extends Monologger
 {
     /**
-     * file location to log to
+     * @var string file path location to log to
      */
     private $logDir;
 
+    /**
+     * Initializes a new game of war logger instance
+     *
+     * @param string $logDir
+     */
     public function __construct($logDir)
     {
         $this->logDir = $logDir;
         $this->initialize();
     }
 
+    /**
+     * Determines if the log file path exists or not, if not it
+     * creates the folder and log file and then initializes the MonoLogger
+     */
     public function initialize()
     {
         if (!file_exists($this->logDir)) {

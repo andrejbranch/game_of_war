@@ -2,6 +2,15 @@
 
 <?php
 
+/**
+ * Symfony console application for the game of war.
+ * This is the main entry point into the application,
+ * asking for user input for both players names and
+ * passing them to the game manager to start the game
+ *
+ * @author Andre Jon Branchizio <andrejbranch@gmail.com>
+ */
+
 require_once __DIR__.'/../bootstrap.php';
 
 use Symfony\Component\Console\Application;

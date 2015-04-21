@@ -3,17 +3,20 @@
 namespace GameOfWar\Service;
 
 use GameOfWar\Entity\Player;
-use Symfony\Component\DependencyInjection\Container;
+use GameOfWar\Service\Logger;
+use Doctrine\ORM\EntityManager;
 
+/**
+ * The Umpire service acts as a referee and arbitrator
+ * for the game of war. It decides who wins and distributes
+ * cards to the winner of each hand.
+ *
+ * @author Andre Jon Branchizio <andrejbranch@gmail.com>
+ */
 class Umpire
 {
     /**
-     * @var Symfony\Component\DependencyInjection\Container
-     */
-    private $container;
-
-    /**
-     * @var Doctrine\ORM\EntityManager
+     * @var Doctrine\ORM\EntityManager for persisting and flushing objects to the db
      */
     private $em;
 
@@ -22,13 +25,26 @@ class Umpire
      */
     private $logger;
 
-    public function __construct(Container $container)
+    /**
+     * Initializes a new Umpire instance
+     *
+     * @param Doctrine\ORM\EntityManager $em
+     * @param GameOfWar\Service\Logger $logger
+     */
+    public function __construct(EntityManager $em, Logger $logger)
     {
-        $this->container = $container;
-        $this->logger = $this->getLogger();
-        $this->em = $this->getEntityManager();
+        $this->em = $em;
+        $this->logger = $logger;
     }
 
+    /**
+     * Handles a given a play of two played cards, one from each player.
+     * If a winner emerges, the win is handled and cards are distributed
+     * to the winning player. If a tie emerges, then war is initiated.
+     *
+     * @param GameOfWar\Entity\Player $player1
+     * @param GameOfWar\Entity\Player $player2
+     */
     public function handlePlay(Player $player1, Player $player2)
     {
         $player1Card = $player1->getPlayerCardInPlay()->getCard();
@@ -58,6 +74,13 @@ class Umpire
         }
     }
 
+    /**
+     * Handles the completion of a given play by distributing the face
+     * down cards to the winning player.
+     *
+     * @param GameOfWar\Entity\Player $winningPlayer
+     * @param GameOfWar\Entity\Player $losingPlayer
+     */
     private function handleWin(Player $winningPlayer, Player $losingPlayer)
     {
         $this->logger->info(sprintf('%s wins this hand', $winningPlayer->getName()));
@@ -94,11 +117,18 @@ class Umpire
         $this->em->flush();
     }
 
+    /**
+     * Handles the initiation of war due to a tie in relative power of cards.
+     *
+     * @param GameOfWar\Entity\Player $player1
+     * @param GameOfWar\Entity\Player $player2
+     */
     private function handleWar(Player $player1, Player $player2)
     {
         $this->logger->info('Umpire: This means war!');
 
         // player1 picks 1 of 3 top cards
+        // if player is out of cards the player2 automatically wins
         if (!$player1->pickWarPlayerCard()) {
 
             $this->handleWin($player2, $player1);
@@ -107,6 +137,7 @@ class Umpire
         }
 
         // player2 picks 1 of 3 top cards
+        // if player is out of cards the player1 automatically wins
         if (!$player2->pickWarPlayerCard()) {
 
             $this->handleWin($player1, $player2);
@@ -114,24 +145,7 @@ class Umpire
             return;
         }
 
+        // both players have picked their cards so now let the Umpire handle the next play
         $this->handlePlay($player1, $player2);
-    }
-
-    /**
-     * Get game of war logger
-     * @return GameOfWar\Service\Logger
-     */
-    private function getLogger()
-    {
-        return $this->container->get('logger');
-    }
-
-    /**
-     * Get doctrine entity manager
-     * @return Doctrine\ORM\EntityManager
-     */
-    private function getEntityManager()
-    {
-        return $this->container->get('entity_manager');
     }
 }

@@ -1,3 +1,4 @@
+# GameOfWar Service definitions
 services:
     logger:
         class: GameOfWar\Service\Logger
@@ -7,15 +8,16 @@ services:
     dealer:
         class: GameOfWar\Service\Dealer
         arguments:
-            - @service_container
+            - @entity_manager
+            - @logger
 
     game_manager:
         class: GameOfWar\Service\GameManager
         arguments:
             - @service_container
-            - @dealer
 
     umpire:
         class: GameOfWar\Service\Umpire
         arguments:
-            - @service_container
+            - @entity_manager
+            - @logger

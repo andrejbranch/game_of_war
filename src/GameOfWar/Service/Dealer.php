@@ -2,19 +2,22 @@
 
 namespace GameOfWar\Service;
 
+use Doctrine\ORM\EntityManager;
 use GameOfWar\Entity\Player;
 use GameOfWar\Entity\PlayerCard;
+use GameOfWar\Service\Logger;
 use Symfony\Component\DependencyInjection\Container;
 
+/**
+ * The dealer is a service in charge of shuffling the deck of cards
+ * and evenly distributing the cards among the two players
+ *
+ * @author Andre Jon Branchizio <andrejbranch@gmail.com>
+ */
 class Dealer
 {
     /**
-     * @var Symfony\Component\DependencyInjection\Container
-     */
-    private $container;
-
-    /**
-     * @var Doctrine\ORM\EntityManager
+     * @var Doctrine\ORM\EntityManager needed for persisting and flushing objects to the db
      */
     private $em;
 
@@ -23,18 +26,25 @@ class Dealer
      */
     private $logger;
 
-    public function __construct(Container $container)
+    /**
+     * Initializes a new dealer instance
+     *
+     * @param EntityManager $em
+     * @param Logger $logger
+     */
+    public function __construct(EntityManager $em, Logger $logger)
     {
-        $this->container = $container;
-        $this->em = $this->getEntityManager();
-        $this->logger = $this->getLogger();
+        $this->em = $em;
+        $this->logger = $logger;
     }
 
     /**
-     * Shuffle and deal cards to players
-     * @param type array $cards
-     * @param type Player $player1
-     * @param type Player $player2
+     * Shuffle and deal cards to players, randomly shuffles and deals
+     * 1 card at a time to each player
+     *
+     * @param array $cards the deck of cards to shuffle and distribute
+     * @param GameOfWar\Entity\Player $player1
+     * @param GameOfWar\Entity\Player $player2
      */
     public function deal(array $cards, Player $player1, Player $player2)
     {
@@ -57,23 +67,5 @@ class Dealer
         $this->em->flush();
 
         $this->logger->info('Cards dealt');
-    }
-
-    /**
-     * Get doctrine entity manager
-     * @return Doctrine\ORM\EntityManager
-     */
-    private function getEntityManager()
-    {
-        return $this->container->get('entity_manager');
-    }
-
-    /**
-     * Get game of war logger
-     * @return GameOfWar\Service\Logger
-     */
-    private function getLogger()
-    {
-        return $this->container->get('logger');
     }
 }
