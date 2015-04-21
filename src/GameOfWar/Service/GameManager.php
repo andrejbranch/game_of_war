@@ -3,6 +3,7 @@
 namespace GameOfWar\Service;
 
 use GameOfWar\Entity\Card;
+use GameOfWar\Entity\Game;
 use GameOfWar\Entity\Player;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -84,14 +85,24 @@ class GameManager
         // insert the players to the db
         $this->em->flush();
 
+        $game = new Game($player1, $player2);
+
+        $this->em->persist($game);
+
+        $this->logger->info('GameManager: creating new game');
+
+        $this->em->flush();
+
         // deal the cards to the players
         $this->dealer->deal($cards, $player1, $player2);
+
+        $this->logger->info('GameManager: game starting');
 
         $gameContinues = true;
 
         while ($gameContinues) {
 
-            $this->umpire->handlePlay($player1, $player2);
+            $this->umpire->handlePlay($game, $player1, $player2);
 
             $player1CardCount = $player1->getCardCount();
             $player2CardCount = $player2->getCardCount();
@@ -107,6 +118,10 @@ class GameManager
         $winningPlayer = $player1CardCount == 0 ? $player2 : $player1;
 
         $this->logger->info(sprintf('GameManager: %s wins!', $winningPlayer->getName()));
+
+        $game->setWinningPlayer($winningPlayer);
+
+        $this->em->flush();
 
         return $winningPlayer;
     }

@@ -18,7 +18,7 @@ class PlayerCard
 {
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="GameOfWar\Entity\Player", inversedBy="cards")
+     * @ORM\ManyToOne(targetEntity="GameOfWar\Entity\Player", inversedBy="playerCards")
      * @ORM\JoinColumn(name="player_id", nullable=false)
      * @var GameOfWar\Entity\Player the player object that owns the linked card
      */

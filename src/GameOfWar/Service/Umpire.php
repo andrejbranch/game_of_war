@@ -2,14 +2,16 @@
 
 namespace GameOfWar\Service;
 
+use GameOfWar\Entity\Game;
+use GameOfWar\Entity\Round;
 use GameOfWar\Entity\Player;
 use GameOfWar\Service\Logger;
 use Doctrine\ORM\EntityManager;
 
 /**
  * The Umpire service acts as a referee and arbitrator
- * for the game of war. It decides who wins and distributes
- * cards to the winner of each hand.
+ * for the game of war. It creates new rounds, and decides
+ * who wins as well as distributes cards to the winner of each hand.
  *
  * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
@@ -25,6 +27,11 @@ class Umpire
      * @var GameOfWar\Service\Logger
      */
     private $logger;
+
+    /**
+     * @var GameOfWar\Entity\Game
+     */
+    private $game;
 
     /**
      * Initializes a new Umpire instance
@@ -46,10 +53,21 @@ class Umpire
      * @param GameOfWar\Entity\Player $player1
      * @param GameOfWar\Entity\Player $player2
      */
-    public function handlePlay(Player $player1, Player $player2)
+    public function handlePlay(Game $game, Player $player1, Player $player2)
     {
+        $this->game = $game;
+
+        $this->logger->info('Umpire: Starting new round');
+
+        $round = new Round($this->game);
+
+        $this->em->persist($round);
+
         $player1Card = $player1->getPlayerCardInPlay()->getCard();
         $player2Card = $player2->getPlayerCardInPlay()->getCard();
+
+        $round->setPlayer1CardPlayed($player1Card);
+        $round->setPlayer2CardPlayed($player2Card);
 
         $this->logger->info(sprintf('Umpire: %s turns a %s', $player1->getName(), $player1Card));
         $this->logger->info(sprintf('Umpire: %s turns a %s', $player2->getName(), $player2Card));
@@ -60,17 +78,17 @@ class Umpire
         // handle war
         if ($player1CardPower == $player2CardPower) {
 
-            $this->handleWar($player1, $player2);
+            $this->handleWar($round, $player1, $player2);
 
         // player 1 wins
         } elseif ($player1CardPower > $player2CardPower) {
 
-            $this->handleWin($player1, $player2);
+            $this->handleWin($round, $player1, $player2);
 
         // player 2 wins
         } else {
 
-            $this->handleWin($player2, $player1);
+            $this->handleWin($round, $player2, $player1);
 
         }
     }
@@ -79,10 +97,11 @@ class Umpire
      * Handles the completion of a given play by distributing the face
      * down cards to the winning player.
      *
+     * @param GameOfWar\Entity\Round $round
      * @param GameOfWar\Entity\Player $winningPlayer
      * @param GameOfWar\Entity\Player $losingPlayer
      */
-    private function handleWin(Player $winningPlayer, Player $losingPlayer)
+    private function handleWin(Round $round, Player $winningPlayer, Player $losingPlayer)
     {
         $this->logger->info(sprintf('Umpire: %s wins this hand', $winningPlayer->getName()));
 
@@ -114,6 +133,8 @@ class Umpire
         $winningPlayer->removeCardInPlay();
         $losingPlayer->removeCardInPlay();
 
+        $round->setWinningPlayer($winningPlayer);
+
         // update the db
         $this->em->flush();
     }
@@ -121,18 +142,29 @@ class Umpire
     /**
      * Handles the initiation of war due to a tie in relative power of cards.
      *
+     * @param GameOfWar\Entity\Round $round
      * @param GameOfWar\Entity\Player $player1
      * @param GameOfWar\Entity\Player $player2
      */
-    private function handleWar(Player $player1, Player $player2)
+    private function handleWar(Round $round, Player $player1, Player $player2)
     {
         $this->logger->info('Umpire: This means war!');
+
+        $round->setIsWar(true);
+
+        $this->em->flush();
 
         // player1 picks 1 of 3 top cards
         // if player is out of cards the player2 automatically wins
         if (!$player1->pickWarPlayerCard()) {
 
-            $this->handleWin($player2, $player1);
+            $this->logger->info('Umpire: Starting new round');
+
+            $round = new Round($this->game);
+
+            $this->em->persist($round);
+
+            $this->handleWin($round, $player2, $player1);
 
             return;
         }
@@ -141,12 +173,18 @@ class Umpire
         // if player is out of cards the player1 automatically wins
         if (!$player2->pickWarPlayerCard()) {
 
-            $this->handleWin($player1, $player2);
+            $this->logger->info('Umpire: Starting new round');
+
+            $round = new Round($this->game);
+
+            $this->em->persist($round);
+
+            $this->handleWin($round, $player1, $player2);
 
             return;
         }
 
         // both players have picked their cards so now let the Umpire handle the next play
-        $this->handlePlay($player1, $player2);
+        $this->handlePlay($this->game, $player1, $player2);
     }
 }
