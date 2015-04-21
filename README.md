@@ -25,6 +25,33 @@ From the root directory tell doctrine to build the database schema and generate 
     php vendor/bin/doctrine orm:schema-tool:create
     php vendor/bin/doctrine orm:generate-proxies
 
+Schema
+-------
+
+    CREATE TABLE `cards` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+      `suit` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
+      `power` int(11) NOT NULL,
+      PRIMARY KEY (`id`)
+    )
+
+    CREATE TABLE `players` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+      PRIMARY KEY (`id`)
+    )
+
+    CREATE TABLE `player_cards` (
+      `player_id` int(11) NOT NULL,
+      `card_id` int(11) NOT NULL,
+      PRIMARY KEY (`player_id`,`card_id`),
+      KEY `IDX_BBB023BB99E6F5DF` (`player_id`),
+      KEY `IDX_BBB023BB4ACC9A20` (`card_id`),
+      CONSTRAINT `FK_BBB023BB4ACC9A20` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`),
+      CONSTRAINT `FK_BBB023BB99E6F5DF` FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+    )
+
 Start the Game
 --------------
 
