@@ -29,3 +29,6 @@ Start the Game
 --------------
 
     ./bin/game_of_war start
+
+
+All game results are logged to logs/game_of_war.log
