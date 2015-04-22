@@ -10,6 +10,7 @@ services:
         arguments:
             - @entity_manager
             - @logger
+            - %cards%
 
     game_manager:
         class: GameOfWar\Service\GameManager

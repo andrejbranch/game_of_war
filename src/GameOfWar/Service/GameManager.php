@@ -65,13 +65,6 @@ class GameManager
      */
     public function start($player1Name, $player2Name)
     {
-        $cards = $this->getCardRepository()->findAll();
-
-        // if no cards are in the db we should generate them from our config file
-        if (empty($cards)) {
-            $cards = $this->generateDeck();
-        }
-
         $player1 = new Player($player1Name);
         $player2 = new Player($player2Name);
 
@@ -94,7 +87,7 @@ class GameManager
         $this->em->flush();
 
         // deal the cards to the players
-        $this->dealer->deal($cards, $player1, $player2);
+        $this->dealer->deal($player1, $player2);
 
         $this->logger->info('GameManager: game starting');
 
@@ -127,34 +120,6 @@ class GameManager
     }
 
     /**
-     * Generate the deck of cards using configurations. This is only called
-     * if this is the first time the game is being run.
-     *
-     * @see config/config.yml
-     * @return array of GameOfWar\Entity\Card objects
-     */
-    private function generateDeck()
-    {
-        $this->logger->info('Generating deck of cards');
-
-        $cardConfigs = $this->getCardConfigs();
-
-        foreach ($cardConfigs as $cardConfig) {
-            foreach (Card::$validSuits as $suit) {
-                $card = new Card($cardConfig['name'], $suit, $cardConfig['power']);
-                $this->em->persist($card);
-            }
-        }
-
-        // insert cards to the db
-        $this->em->flush();
-
-        $this->logger->info('GameManager: Deck generated');
-
-        return $this->getCardRepository()->findAll();
-    }
-
-    /**
      * Get the game of war card dealer
      *
      * @return GameOfWar\Service\Dealer
@@ -182,27 +147,6 @@ class GameManager
     private function getLogger()
     {
         return $this->container->get('logger');
-    }
-
-    /**
-     * Get card entity repository
-     *
-     * @return GameOfWar\Entity\CardRepository;
-     */
-    private function getCardRepository()
-    {
-        return $this->getEntityManager()->getRepository('GameOfWar\Entity\Card');
-    }
-
-    /**
-     * Get the card configurations
-     *
-     * @see config/config.yml
-     * @return array
-     */
-    private function getCardConfigs()
-    {
-        return $this->container->getParameter('cards');
     }
 
     /**
