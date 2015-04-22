@@ -4,8 +4,8 @@ namespace GameOfWar\Service;
 
 use Doctrine\ORM\EntityManager;
 use GameOfWar\Entity\Game;
-use GameOfWar\Entity\Round;
 use GameOfWar\Entity\Player;
+use GameOfWar\Entity\Round;
 use GameOfWar\Service\Logger;
 
 /**
