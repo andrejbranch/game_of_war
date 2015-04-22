@@ -50,6 +50,7 @@ class Umpire
      * If a winner emerges, the win is handled and cards are distributed
      * to the winning player. If a tie emerges, then war is initiated.
      *
+     * @param GameOfWar\Entity\Game $game
      * @param GameOfWar\Entity\Player $player1
      * @param GameOfWar\Entity\Player $player2
      */
