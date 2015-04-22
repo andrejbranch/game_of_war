@@ -95,8 +95,8 @@ class Umpire
     }
 
     /**
-     * Handles the completion of a given play by distributing the face
-     * down cards to the winning player.
+     * Handles the completion of a given play by distributing the table
+     * cards to the winning player.
      *
      * @param GameOfWar\Entity\Round $round
      * @param GameOfWar\Entity\Player $winningPlayer
