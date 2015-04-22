@@ -84,7 +84,7 @@ class Dealer
      *
      * @return array of GameOfWar\Entity\Card objects
      */
-    public function getCards()
+    private function getCards()
     {
         $cards = $this->getCardRepository()->findAll();
 

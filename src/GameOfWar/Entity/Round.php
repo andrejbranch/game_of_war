@@ -25,7 +25,7 @@ class Round
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", name="is_war")
      * @var bool whether the round resulted in war or not
      */
     protected $isWar = false;

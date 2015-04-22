@@ -62,7 +62,7 @@ Schema
       `player2_card_played_id` int(11) DEFAULT NULL,
       `winning_player_id` int(11) DEFAULT NULL,
       `game_id` int(11) NOT NULL,
-      `isWar` tinyint(1) NOT NULL,
+      `is_war` tinyint(1) NOT NULL,
       PRIMARY KEY (`id`),
       KEY `IDX_3A7FD554843CBB20` (`player1_card_played_id`),
       KEY `IDX_3A7FD554ADF40FD2` (`player2_card_played_id`),
