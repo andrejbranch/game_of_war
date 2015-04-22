@@ -2,11 +2,11 @@
 
 namespace GameOfWar\Service;
 
+use Doctrine\ORM\EntityManager;
 use GameOfWar\Entity\Game;
 use GameOfWar\Entity\Round;
 use GameOfWar\Entity\Player;
 use GameOfWar\Service\Logger;
-use Doctrine\ORM\EntityManager;
 
 /**
  * The Umpire service acts as a referee and arbitrator
